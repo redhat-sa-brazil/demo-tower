@@ -1,0 +1,40 @@
+---
+#
+#  Playbook to create new instances and firewall rules on Google Cloud
+#  Platform using the Cloud Credentials provided by Ansible Tower.
+#
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Create Demonstration Instances
+      gce:
+        instance_names: "{{ item }}"
+        zone: us-east1-b
+        machine_type: g1-small
+        image: rhel7-server
+        state: present
+        tags:
+          - demo-tower
+          - "{{ item }}"
+        metadata : '{ "startup-script" : "echo Yeah!" }'
+      with_items:
+        - demo-tower-webserver
+        - demo-tower-dbserver
+      register: gce
+   
+    - name: Wait for SSH for Instances
+      wait_for:
+        delay: 30
+        host: "{{ item.instance_data[0].public_ip }}"
+        port: 22
+        state: started
+        timeout: 120
+      with_items: "{{ gce.results }}"
+
+    - name: Create Firewall Rule w/Source Range
+      gce_net:
+        name: default
+        fwname: "demo-tower-rule"
+        allowed: "tcp:8080;tcp:5432"
+        state: "present"
+        src_range: ['0.0.0.0/0']

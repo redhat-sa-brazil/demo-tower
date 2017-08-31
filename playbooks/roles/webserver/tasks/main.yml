@@ -1,0 +1,16 @@
+---
+- name: Install JBoss EAP 7 packages
+  yum:  name={{ item }} state=latest
+  with_items:
+    - eap7-artemis-native-wildfly
+    - eap7-wildfly
+
+- name: Enable and start JBoss EAP7 standalone service
+  service: name=eap7-standalone state=started enabled=yes
+
+- name: Copy Demo Application WAR file to host
+  copy: src=ticket-monster.war dest=/tmp
+
+- name: Deploy Demo Application (Ticket Monster) to JBoss
+  jboss: deploy_path=/opt/rh/eap7/root/usr/share/wildfly/standalone/deployments src=/tmp/ticket-monster.war deployment=ticket-monster.war state=present
+

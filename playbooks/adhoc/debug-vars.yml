@@ -1,0 +1,9 @@
+---
+#
+# This playbook could be used to debug variables passed by
+# Ansible Tower, using localhost.
+#
+- hosts: localhost
+  tasks:
+      - name: Dump All Variables
+        debug: var=vars

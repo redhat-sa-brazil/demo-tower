@@ -1,0 +1,10 @@
+---
+#
+# Playbook to apply specific configuration for webserver hosts.
+#
+- name: Web Server Configuration Policies
+  hosts: tag_demo-tower-webserver
+
+  roles:
+    - common
+    - webserver

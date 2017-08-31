@@ -1,0 +1,6 @@
+---
+#
+# Playbooks that unify both webserver and dbserver playbooks.
+#
+- include: webserver.yml
+- include: dbserver.yml

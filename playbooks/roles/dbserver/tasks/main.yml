@@ -1,0 +1,31 @@
+---
+- name: Install PostgreSQL packages and dependencies
+  yum:  name={{ item }} state=latest
+  with_items:
+    - postgresql-server
+    - python-psycopg2
+
+- name: Initialize PostgreSQL database cluster
+  shell: postgresql-setup initdb
+  ignore_errors: True
+
+- name: Configure PostgreSQL service (1/2)
+  template: src=pg_hba.conf.j2 dest=/var/lib/pgsql/data/pg_hba.conf owner=postgres group=postgres mode=0600
+  notify: Reload PostgreSQL service
+
+- name: Configure PostgreSQL service (2/2)
+  template: src=postgresql.conf.j2 dest=/var/lib/pgsql/data/postgresql.conf owner=postgres group=postgres mode=0600
+  notify: Reload PostgreSQL service
+
+- name: Enable and start PostgreSQL service
+  service: name=postgresql state=started enabled=yes
+
+- name: Create database
+  postgresql_db: name="{{ db_name }}"
+  become: yes
+  become_user: postgres
+
+- name: Create user/password for the database
+  postgresql_user: db="{{ db_name }}" name="{{ db_user }}" password="{{ db_password }}" priv=ALL
+  become: yes
+  become_user: postgres

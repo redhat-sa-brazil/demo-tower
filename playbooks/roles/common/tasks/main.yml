@@ -1,0 +1,31 @@
+---
+- name: Subscribe system to Red Hat
+  redhat_subscription: state=present username={{ rhn_username }} password={{ rhn_password }} autosubscribe=true
+  register: subscription
+
+- name: Disable all software channels
+  shell: subscription-manager repos --disable="*"
+  when: subscription.changed
+
+- name: Enable common software channels
+  shell: subscription-manager repos --enable="{{ item }}"
+  with_items:
+    - rhel-7-server-rpms
+    - rhel-7-server-optional-rpms
+    - rhel-7-server-extras-rpms
+    - jb-eap-7-for-rhel-7-server-rpms
+  when: subscription.changed
+
+- name: Install basic system tools
+  yum:  name={{ item }} state=latest
+  with_items:
+    - bash-completion
+    - mlocate
+    - wget
+    - vim
+
+- name: Enable and configure SELinux Enforcing
+  selinux: policy=targeted state=enforcing
+
+- name: Set timezone to BRT (Americas/São Paulo)
+  file: src=/usr/share/zoneinfo/America/Sao_Paulo dest=/etc/localtime state=link force=yes

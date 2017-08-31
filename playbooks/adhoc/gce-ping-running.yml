@@ -1,0 +1,10 @@
+---
+#
+# Basic playbook to execute connectivity test on GCE instances that
+# are currently on 'running' state filtering by dynamic groups.
+#
+- hosts: status_running
+  gather_facts: yes
+  tasks:
+  - name: Ping All Running Instances
+    ping:

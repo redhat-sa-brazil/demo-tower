@@ -1,0 +1,21 @@
+---
+#
+#  Playbook to remove new instances and firewall rules on Google Cloud
+#  Platform using the Cloud Credentials provided by Ansible Tower.
+#
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Remove Demonstration Instances
+      gce:
+        instance_names: "{{ item }}"
+        zone: us-east1-b
+        state: absent
+      with_items:
+        - demo-tower-webserver
+        - demo-tower-dbserver
+    - name: Remove Firewall Rule w/Source Range
+      gce_net:
+        name: default
+        fwname: demo-tower-rule
+        state: absent

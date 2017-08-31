@@ -1,0 +1,10 @@
+---
+#
+# Playbook to apply specific configuration for dbserver hosts.
+#
+- name: Database Server Configuration Policies
+  hosts: tag_demo-tower-dbserver 
+
+  roles:
+    - common
+    - dbserver
