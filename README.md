@@ -6,7 +6,7 @@ This repository is used to provide a public resource of demonstrations and examp
 ## Details
 We have the following structure:
 * `./playbooks/`: Root level directory, used for main playbooks.
-* `./playbooks/<roles>`: Ansible Roles that provides modularity for the playbooks.
+* `./playbooks/roles`: Ansible Roles that provides modularity for the playbooks.
 * `./playbooks/adhoc`: Ad-hoc tasks that can be used as standalone playbooks.
 
 ## Contributions
