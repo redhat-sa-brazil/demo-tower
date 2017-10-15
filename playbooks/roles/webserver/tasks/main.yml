@@ -6,7 +6,7 @@
     - eap7-wildfly
 
 - name: Enable and start JBoss EAP7 standalone service
-  service: name=eap7-standalone state=started enabled=yes
+  service: name=eap7-standalone state=restarted enabled=yes
 
 - name: Copy Demo Application WAR file to host
   copy: src=ticket-monster.war dest=/tmp
