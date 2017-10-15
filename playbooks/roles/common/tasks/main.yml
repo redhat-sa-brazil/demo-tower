@@ -1,6 +1,6 @@
 ---
 - name: Subscribe system to Red Hat
-  redhat_subscription: state=present username={{ rhn_username }} password={{ rhn_password }} autosubscribe=true
+  redhat_subscription: state=present username={{ rhn_username }} password={{ rhn_password }} pool={{ rhn_pool_name }}
   register: subscription
 
 - name: Disable all software channels
