@@ -4,6 +4,7 @@
 #  other server.
 #
 - hosts: localhost
+  gather_facts: no
   tasks:
     - name: Download PDF file from HTTP to local server
       get_url:
@@ -11,6 +12,7 @@
         dest: /tmp/demo-file.pdf
 
 - hosts: demo-tower-webserver
+  gather_facts: no
   tasks:
     - name: Copy PDF file from local server to remote server
       copy:
@@ -18,6 +20,7 @@
         dest: /tmp/demo-webserver-file.pdf
 
 - hosts: demo-tower-dbserver
+  gather_facts: no
   tasks:
     - name: Transfer file from one server to another
       synchronize:
@@ -26,6 +29,7 @@
       delegate_to: demo-tower-webserver
 
 - hosts: demo-tower-dbserver
+  gather_facts: no
   tasks:
     - name: Copy PDF file from remote server to local server
       fetch:
