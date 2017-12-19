@@ -1,0 +1,33 @@
+---
+#
+#  Playbook to copy files from remote server, and then transmit to
+#  other server.
+#
+- hosts: localhost
+  tasks:
+    - name: Download PDF file from HTTP to local server
+      get_url:
+        url: http://unec.edu.az/application/uploads/2014/12/pdf-sample.pdf
+        dest: /tmp/demo-file.pdf
+
+- hosts: demo-tower-webserver
+  tasks:
+    - name: Copy PDF file from local server to remote server
+      copy:
+        src: /tmp/demo-file.pdf
+        dest: /tmp/demo-webserver-file.pdf
+
+- hosts: demo-tower-dbserver
+  tasks:
+    - name: Transfer file from one server to another
+      synchronize:
+        src: /tmp/demo-webserver-file.pdf
+        dest: /tmp/demo-dbserver-file.pdf
+      delegate_to: demo-tower-webserver
+
+- hosts: demo-tower-dbserver
+  tasks:
+    - name: Copy PDF file from remote server to local server
+      fetch:
+        src: /tmp/demo-dbserver-file.pdf
+        dest: /tmp/demo-file-again.pdf

@@ -1,0 +1,10 @@
+---
+#
+#  Playbook to demonstrate async with pooling.
+#
+- hosts: localhost
+  tasks:
+    - name: Simulate long running task (15 sec), wait for up to 10 sec, poll every 5 sec.
+      command: /bin/sleep 15
+      async: 10
+      poll: 5
